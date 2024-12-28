@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아우리스 메뉴 계산기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #f9f9f9;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #title {
+      font-size: 40px;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+    .category {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .category-button {
+      padding: 20px 40px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      transition: background-color 0.3s;
+      font-weight: bold;
+    }
+    .category-button:hover {
+      background-color: #d0e7ff;
+    }
+
+    .menu {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .menu.active {
+      display: flex;
+    }
+    .menu-item {
+      padding: 10px 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s;
+      font-size: 16px;
+      position: relative;  /* 위치를 상대적으로 설정하여 하단 바를 맞출 수 있도록 */
+    }
+    .menu-item:hover {
+      background-color: #ffe0e0;
+    }
+
+    .menu-item.selected::after {
+      content: '';
+      position: absolute;
+      bottom: 0;  /* 버튼 내부 하단에 정확히 위치하도록 수정 */
+      left: 0;
+      width: 100%;
+      height: 2px;  /* 바의 두께 */
+      background-color: rgba(255, 0, 0, 0.6);  /* 투명한 빨간색 바 */
+      transition: opacity 1s ease-out;  /* 1초 후에 사라지게 처리 */
+    }
+
+    .menu-item.selected.removed::after {
+      opacity: 0;
+    }
+
+    /* 각 버튼 색상 */
+    .highlight-light-yellow {
+      background-color: #f7e55c;
+    }
+    .highlight-light-red {
+      background-color: #ffb3b3;
+    }
+    .highlight-light-pink {
+      background-color: #f8d0d6;
+    }
+    .highlight-white {
+      background-color: #ffffff;
+    }
+    .highlight-light-gray {
+      background-color: #dcdcdc;
+    }
+    .highlight-light-skyblue {
+      background-color: #a2c8f1;
+    }
+    .highlight-light-brown {
+      background-color: #e8d6b3;
+    }
+
+    .highlight-light-orange {
+      background-color: #f7a27a;
+    }
+    .highlight-light-green {
+  background-color: #90ee90; /* 연한 초록색 */
+}
+
+.highlight-light-apricot {
+  background-color: #f7c7a1; /* 연한 살구색 */
+}
+
+.highlight-brown {
+background-color: #e8d6b3; /* 초코색 */
+}
+
+.highlight-white-pink {
+  background-color: #f4c6d7; /* 흰색과 핑크색 사이 */
+}
+
+    #footer {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    #total {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    #reset-button, #back-button, #discount-button {
+      padding: 12px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s;
+      font-size: 14px;
+    }
+    #reset-button:hover, #back-button:hover, #discount-button:hover {
+      background-color: #ffdede;
+    }
+    #back-button {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1 id="title">아우리스 메뉴 계산기</h1>
+
+    <div class="category" id="category">
+      <div class="category-button highlight-light-skyblue" data-category="ice21" data-title="한가한 아이스 21">한가한 아이스 21</div>
+      <div class="category-button highlight-light-orange" data-category="연동분식" data-title="연동분식">연동분식</div>
+    </div>
+
+    <div class="menu" id="ice21">
+      <!-- Removed previous items -->
+<div class="menu-item highlight-light-skyblue" data-price="4500">딸기 (4500원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="4500">초코 (4500원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">민초 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="4500">바닐라 (4500원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">땅콩 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">요거트21 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">블랙 소르베 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">애플민트 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">레인보우 샤베트 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="6000">벌꿀 (6000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">제주말차 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">아이스 감귤나 (5000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="6000">한라봉 (6000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="7000">한라산은 분화해 (7000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="6000">우야민초 (6000원)</div>
+<div class="menu-item highlight-light-skyblue" data-price="5000">구슬 아이스크림 (5000원)</div>
+ <div class="menu-item highlight-light-green" data-price="20000">메가 초코 (20000원)</div>
+<div class="menu-item highlight-light-green" data-price="20000">메가 딸기 (20000원)</div>
+<div class="menu-item highlight-light-apricot" data-price="4000">스틱바 시리즈 (4000원)</div>
+<div class="menu-item highlight-brown" data-price="3000">샌드 시리즈 (3000원)</div>
+<div class="menu-item highlight-white-pink" data-price="5000">밀크쉐이크 (5000원)</div>
+<div class="menu-item highlight-white-pink" data-price="6000">팥빙수 블라스트 (6000원)</div>
+<div class="menu-item highlight-white-pink" data-price="6000">망고빙수 블라스트 (6000원)</div>
+    </div>
+
+    <div class="menu" id="연동분식">
+      <div class="menu-item highlight-light-yellow" data-price="1500">공기밥 (1500원)</div>
+      <div class="menu-item highlight-light-yellow" data-price="1000">미소된장국 (1000원)</div>
+      <div class="menu-item highlight-light-yellow" data-price="7000">된장찌개 (7000원)</div>
+      <div class="menu-item highlight-light-yellow" data-price="7000">김치찌개 (7000원)</div>
+      <div class="menu-item highlight-light-yellow" data-price="6000">떡만둣국 (6000원)</div>
+
+      <div class="menu-item highlight-light-red" data-price="5000">오리지널 떡볶이 (5000원)</div>
+      <div class="menu-item highlight-light-red" data-price="6000">짜장 떡볶이 (6000원)</div>
+      <div class="menu-item highlight-light-red" data-price="6000">로제 떡볶이 (6000원)</div>
+      <div class="menu-item highlight-light-red" data-price="6000">민초 떡볶이 (6000원)</div>
+      <div class="menu-item highlight-light-red" data-price="7000">차돌 떡볶이 (7000원)</div>
+      <div class="menu-item highlight-light-red" data-price="5000">치즈 떡볶이 (5000원)</div>
+
+      <div class="menu-item highlight-light-brown" data-price="6000">연동 김밥 (6000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="5000">순대와 간 (5000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="5000">군만두 (5000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="7000">오므라이스 (7000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="8000">연동 돈까스 (8000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="6000">달걀 볶음밥 (6000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="7000">김치 볶음밥 (7000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="3000">핫도그 (3000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="2000">주먹밥 (2000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="3000">오뎅 & 국물 (3000원)</div>
+      <div class="menu-item highlight-light-brown" data-price="1500">오뎅 한개 (1500원)</div>
+      <div class="menu-item highlight-light-brown" data-price="4000">소떡소떡 (4000원)</div>
+
+      <div class="menu-item highlight-white" data-price="7000">계란떡 라면 (7000원)</div>
+      <div class="menu-item highlight-white" data-price="6000">연동 우동 (6000원)</div>
+      <div class="menu-item highlight-white" data-price="3000">쫄면 (3000원)</div>
+
+      <div class="menu-item highlight-light-gray" data-price="5000">새우튀김 (5000원)</div>
+      <div class="menu-item highlight-light-gray" data-price="4000">김말이 튀김 (4000원)</div>
+
+      <div class="menu-item highlight-light-skyblue" data-price="2000">소다 슬러쉬 (2000원)</div>
+      <div class="menu-item highlight-light-skyblue" data-price="2000">망고 슬러쉬 (2000원)</div>
+      <div class="menu-item highlight-light-skyblue" data-price="1000">콜라 (1000원)</div>
+    </div>
+
+    <div id="footer" style="display: none;">
+      <div id="total">합계: 0원</div>
+      <button id="reset-button">합계 초기화</button>
+      <button id="discount-button">50% 할인</button>
+      <button id="back-button">뒤로가기</button>
+    </div>
+  </div>
+
+  <script>
+    const title = document.getElementById('title');
+    const categoryButtons = document.querySelectorAll('.category-button');
+    const categorySection = document.getElementById('category');
+    const menus = document.querySelectorAll('.menu');
+    const totalDisplay = document.getElementById('total');
+    const footer = document.getElementById('footer');
+    const backButton = document.getElementById('back-button');
+    const resetButton = document.getElementById('reset-button');
+    const discountButton = document.getElementById('discount-button');
+    let total = 0;
+    let discountApplied = false;
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        categoryButtons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+        const category = button.getAttribute('data-category');
+        const newTitle = button.getAttribute('data-title');
+        title.textContent = `${newTitle} 메뉴 계산기`;
+        categorySection.style.display = 'none';
+        const activeMenu = document.getElementById(category);
+        if (activeMenu) {
+          activeMenu.classList.add('active');
+        }
+        footer.style.display = 'flex';
+      });
+    });
+
+    menus.forEach(menu => {
+      menu.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target.classList.contains('menu-item')) {
+          const price = parseInt(target.getAttribute('data-price'));
+          total += price;
+          totalDisplay.textContent = `합계: ${total.toLocaleString()}원`;
+
+          // 클릭된 메뉴에 하단 바 추가
+          target.classList.add('selected');
+
+          // 기존에 바가 사라졌다면, 다시 추가
+          target.classList.remove('removed');
+
+          // 1초 후에 바를 사라지게
+          setTimeout(() => {
+            target.classList.add('removed');
+          }, 1000);
+        }
+      });
+    });
+
+    resetButton.addEventListener('click', () => {
+      total = 0;
+      totalDisplay.textContent = '합계: 0원';
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('selected', 'removed'));
+    });
+
+    discountButton.addEventListener('click', () => {
+      if (!discountApplied) {
+        total = Math.floor(total / 2);
+        totalDisplay.textContent = `합계: ${total.toLocaleString()}원 (50% 할인 적용)`;
+        discountApplied = true;
+      }
+    });
+
+    backButton.addEventListener('click', () => {
+      title.textContent = '아우리스 메뉴 계산기';
+      categorySection.style.display = 'flex';
+      footer.style.display = 'none';
+      menus.forEach(menu => menu.classList.remove('active'));
+    });
+  </script>
+</body>
+</html>
